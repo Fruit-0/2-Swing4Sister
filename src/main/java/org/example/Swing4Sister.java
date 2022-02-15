@@ -13,6 +13,8 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -191,19 +193,29 @@ public class Swing4Sister {
     private static void dealExcels(String excelFilesPath, String txtPath) throws Exception {
         File excelirectory = new File(excelFilesPath);
         if (excelirectory.isDirectory()) {
-            File[] files = excelirectory.listFiles();
             // 每次执行都重新创建txt文件
             if (new File(txtPath).exists()) {
                 new File(txtPath).delete();
             }
+            //实现文件名的排序（正序）--------------START
             // 遍历excel文件夹下的文件
-            for (File file : files) {
-                if (file.isFile()) {
-                    excelNumber+=1;
-                    // 写数据
-                    writeExcelInfoTxt(file.getPath(), txtPath);
-                }
+            String[] files = excelirectory.list();
+            ArrayList<FileString> imgURList = new ArrayList<>();
+            for (String name : files) {
+                //把文件名放入list里面
+                imgURList.add(new FileString(name));
+
             }
+            Collections.sort(imgURList);
+
+            for (FileString fileString : imgURList) {
+                excelNumber+=1;
+                String excelPath = excelFilesPath+"/"+fileString;
+                // 写数据
+                writeExcelInfoTxt(excelPath, txtPath);
+                System.out.println(fileString);
+            }
+            //实现文件名的排序（正序）--------------END
         } else {
             throw new Exception("请指定一个文件夹");
         }
